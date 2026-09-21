@@ -1083,36 +1083,26 @@ def main():
     app.add_handler(CallbackQueryHandler(button_handler))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_message_handler))
     app.add_handler(MessageHandler(filters.Document.ALL, document_handler))
-import asyncio
-import logging
-from aiohttp import web
 
-# লগিং সেটআপ
-logging.basicConfig(level=logging.INFO)
-
-# রুট ইউআরএল হ্যান্ডলার
-async def handle_ping(request):
-    return web.Response(text="I am alive!", status=200)
-
-# সার্ভার স্টার্ট করার ফাংশন
-async def start_uptime_server(port=8080):
-    app = web.Application()
-    app.router.add_get('/', handle_ping)
-    app.router.add_get('/ping', handle_ping)
-    
-    runner = web.AppRunner(app)
-    await runner.setup()
-    
-    # Render বা অন্যান্য প্ল্যাটফর্মের PORT এনভায়রনমেন্ট ভ্যারিয়েবল সাপোর্ট
-    site = web.TCPSite(runner, '0.0.0.0', port)
-    await site.start()
-    logging.info(f"⚡ Uptime Web Server running on port {port}")
-
-# মূল টেলিগ্রাম বট কোডে যুক্ত করার নিয়ম:
-# আপনার main.py ফাইলে asyncio event loop চলাকালীন নিচে এভাবে কল করতে পারেন:
-# asyncio.create_task(start_uptime_server(8080))
-    
     print("🤖 Bot is up and running...")
+
+    # main.py এর নিচে এভাবে যুক্ত করতে পারেন
+
+async def main_async():
+    # Uptime Server ব্যাকগ্রাউন্ডে রান হবে
+    asyncio.create_task(start_uptime_server(8080))
+    
+    # আপনার মূল বট রান হবে
+    # ...
+
+if __name__ == "__main__":
+    # যদি আপনার বটে aiohttp ওয়েব সার্ভার ব্যবহার করতে চান:
+    loop = asyncio.get_event_loop()
+    loop.create_task(start_uptime_server(8080))
+    
+    main() # আপনার বটের মূল main() ফাংশন
+
+    
     app.run_polling()
 
 if __name__ == "__main__":
