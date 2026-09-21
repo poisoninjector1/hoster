@@ -1085,24 +1085,6 @@ def main():
     app.add_handler(MessageHandler(filters.Document.ALL, document_handler))
 
     print("🤖 Bot is up and running...")
-
-    # main.py এর নিচে এভাবে যুক্ত করতে পারেন
-
-async def main_async():
-    # Uptime Server ব্যাকগ্রাউন্ডে রান হবে
-    asyncio.create_task(start_uptime_server(8080))
-    
-    # আপনার মূল বট রান হবে
-    # ...
-
-if __name__ == "__main__":
-    # যদি আপনার বটে aiohttp ওয়েব সার্ভার ব্যবহার করতে চান:
-    loop = asyncio.get_event_loop()
-    loop.create_task(start_uptime_server(8080))
-    
-    main() # আপনার বটের মূল main() ফাংশন
-
-    
     app.run_polling()
 
 if __name__ == "__main__":
