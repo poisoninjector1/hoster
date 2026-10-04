@@ -16,13 +16,12 @@ from telegram.ext import (
     ApplicationBuilder, CommandHandler, CallbackQueryHandler, 
     ContextTypes, MessageHandler, filters
 )
+
 import os
-import sys
-import subprocess
 import threading
 from flask import Flask
 
-# --- FLASK KEEP-ALIVE SERVER FOR RENDER ---
+# --- FLASK KEEP-ALIVE SERVER ---
 web_app = Flask('')
 
 @web_app.route('/')
@@ -30,13 +29,19 @@ def home():
     return "Bot is alive and running!"
 
 def run_flask():
+    # Render dynamic PORT ব্যবহার করে
     port = int(os.environ.get("PORT", 8080))
     web_app.run(host='0.0.0.0', port=port)
 
 def keep_alive():
     t = threading.Thread(target=run_flask)
-    t.daemon = True
     t.start()
+
+# --- আপনার বটের মূল অংশ রান করার আগে এটি কল করুন ---
+if __name__ == "__main__":
+    keep_alive()  # ওয়েব সার্ভার ব্যাকগ্রাউন্ডে চালু হবে
+    
+    # এরপর আপনার Telegram Bot-er code চালু হবে (app.run_polling())
 
 
 
